@@ -46,6 +46,33 @@ const productSchema = new mongoose.Schema(
 //model
 let Product=mongoose.model("Product",productSchema)
 
+//middleware--parses incoming json data
+app.use(express.json())
+
+//create product
+app.post("/products",async (req,res,next)=>{
+  let {productName,price,category}=req.body;
+    try {
+      if(!productName || !category){
+        res.status(400).json({message:"Please fill all fields"})
+        return;
+      }
+      let newProduct= await Product.create({
+        productName,
+        price,
+        category
+      })
+      if(!newProduct){
+        res.status(400).json({message:"Error creating product"})
+        return;
+      }
+      res.status(201).json(newProduct)
+    } catch (error) {
+      console.log("error in create product route",error);
+      res.status(500).json({message:"Internal server error"})
+    }
+})
+
 
 
 export default app;
