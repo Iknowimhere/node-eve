@@ -108,7 +108,7 @@ app.get("/products/:id",async (req,res)=>{
 app.patch("/products/:id",async(req,res)=>{
   try {
     let {id}=req.params
-    let updatedProduct=await Product.findByIdAndUpdate(id,{...req.body})
+    let updatedProduct=await Product.findByIdAndUpdate(id,{...req.body},{new:true})
      if (!updatedProduct) {
       res.status(404).json({ message: `Error updating product` });
       return;
