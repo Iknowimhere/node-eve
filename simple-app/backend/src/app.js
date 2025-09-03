@@ -73,9 +73,16 @@ app.post("/products", async (req, res, next) => {
   }
 });
 
+//advanced search feature
 app.get("/products", async (req, res, next) => {
   try {
-    let products = await Product.find();
+    let query={};
+    // { "<field>": { "$regex": "pattern", "$options": "<options>" } }
+    if(req.query.search){
+      query.productName= { "$regex": req.query.search, "$options": "i" } 
+    }
+    //category
+    let products = await Product.find(query);
     if (products?.length <= 0) {
       res.status(200).json({ message: "No products found" });
       return;
@@ -86,6 +93,8 @@ app.get("/products", async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+
 //dymanic url
 //route parametes--they are named url segments which can be captured
 //The captured values are populated in the req.params object
