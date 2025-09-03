@@ -1,0 +1,26 @@
+POST http://localhost:5000/products HTTP/1.1
+content-type: application/json
+
+{
+    "productName": "laptop",
+    "price": 100,
+    "category":"electronics"
+}
+
+###
+GET http://localhost:5000/products HTTP/1.1
+
+###
+GET http://localhost:5000/products/68b6e8ade9578e7fe16f3f98 HTTP/1.1
+
+###
+PATCH  http://localhost:5000/products/68b6e8ade9578e7fe16f3f98 HTTP/1.1
+content-type: application/json
+
+{
+    "isFastMoving":true,
+    "quantity":100
+}
+
+###
+DELETE  http://localhost:5000/products/68b6e8ade9578e7fe16f3f98 HTTP/1.1
