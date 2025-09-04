@@ -9,6 +9,12 @@ import {
 } from "../controllers/productControllers.js";
 
 //create product
+
+router.get("/home",(req,res,next)=>{
+  let name="tom";
+  res.render("home.ejs",{name})
+})
+
 router.post("/", createProduct);
 
 //advanced search feature
