@@ -7,6 +7,39 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1>Hello <%= locals.name %> </h1>
+
+    <h1>Product mart</h1>
+  <header>
+    <h2>Create a Product</h2>
+    <form action="/products" method="post">
+        <label for="productName">Product name</label>
+        <input type="text" name="productName" id="productName">
+        <label for="price">Price</label>
+        <input type="number" name="price" id="price">
+        <label for="categories">Categories</label>
+        <select name="category" id="categories">
+            <option value="stationery">stationery</option>
+            <option value="kitchen">kitchen</option>
+            <option value="electronics">electronics</option>
+            <option value="apparels">apparels</option>
+        </select>
+        <label for="quantity">Quantity</label>
+        <input type="number" name="quantity" id="quantity">
+        <button type="submit">Create Product</button>
+        <button type="reset">Clear</button>
+    </form>
+  </header>
+  <main>
+    <h2>List of products available</h2>
+    <ul>
+        <% if(locals.products.length == 0){ %>
+            <p>No products found</p>
+        <% } %>
+
+        <% locals.products.forEach(product=>{ %>
+            <li> <b>Product name:</b> <%= product.productName %>- <b>Price:</b> <%= product.price %> </li>
+        <%}) %>
+    </ul>
+  </main>
 </body>
 </html>

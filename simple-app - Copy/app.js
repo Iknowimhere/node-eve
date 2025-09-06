@@ -10,6 +10,8 @@ app.set("view engine","ejs")
 
 //middleware--parses incoming json data
 app.use(express.json());
+//middleware--parses incoming FORM data
+app.use(express.urlencoded({extended:true}))
 //serves static resources from specified folder
 app.use(express.static("public"))
 //base route
