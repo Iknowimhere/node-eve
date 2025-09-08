@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import cors from 'cors'
 let app = express();
 
 //db connection
@@ -48,9 +49,10 @@ let Product = mongoose.model("Product", productSchema);
 
 //middleware--parses incoming json data
 app.use(express.json());
-
+app.use(cors({origin:"http://localhost:5173"}))
 //create product
 app.post("/products", async (req, res, next) => {
+  console.log(req.body);
   let { productName, price, category } = req.body;
   try {
     if (!productName || !category) {
