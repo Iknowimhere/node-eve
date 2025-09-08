@@ -37,7 +37,11 @@
         <% } %>
 
         <% locals.products.forEach(product=>{ %>
-            <li> <b>Product name:</b> <%= product.productName %>- <b>Price:</b> <%= product.price %> </li>
+            <li> <b>Product name:</b> <%= product.productName %>- <b>Price:</b> <%= product.price %> <button><a href="/products/<%= product._id%>">View</a></button>  
+            <form action="/products/<%= product._id %>?_method=DELETE" method="post">
+                <button>Delete</button>
+            </form>
+            </li>
         <%}) %>
     </ul>
   </main>

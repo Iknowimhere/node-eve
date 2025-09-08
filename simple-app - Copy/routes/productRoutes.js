@@ -21,7 +21,7 @@ router.get("/", getProducts);
 //The captured values are populated in the req.params object
 router.get("/:id", getProduct);
 
-router.patch("/:id", updateProduct);
+router.put("/:id", updateProduct);
 
 router.delete("/:id", deleteProduct);
 

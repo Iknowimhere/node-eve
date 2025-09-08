@@ -39,7 +39,8 @@ export const getProduct = async (req, res) => {
       res.status(404).json({ message: `No product with this ${id} found` });
       return;
     }
-    res.status(200).json(product);
+    // res.render("SingleProduct",{product})
+    res.render("UpdateProduct",{product})
   } catch (error) {
     console.log("error in getting single product route", error);
     res.status(500).json({ message: "Internal server error" });
@@ -49,16 +50,11 @@ export const getProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     let { id } = req.params;
-    let updatedProduct = await Product.findByIdAndUpdate(
+    await Product.findByIdAndUpdate(
       id,
-      { ...req.body },
-      { new: true }
+      { ...req.body }
     );
-    if (!updatedProduct) {
-      res.status(404).json({ message: `Error updating product` });
-      return;
-    }
-    res.status(200).json(updatedProduct);
+    res.redirect("/products")
   } catch (error) {
     console.log("error in updating single product route", error);
     res.status(500).json({ message: "Internal server error" });
@@ -68,12 +64,8 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     let { id } = req.params;
-    let product = await Product.findByIdAndDelete(id);
-    if (!product) {
-      res.status(404).json({ message: `No product with this ${id} found` });
-      return;
-    }
-    res.status(204).json();
+    await Product.findByIdAndDelete(id);
+   res.redirect("/products")
   } catch (error) {
     console.log("error in deleting single product route", error);
     res.status(500).json({ message: "Internal server error" });

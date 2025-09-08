@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+   <main>
+     <h2>Update a Product</h2>
+    <form action="/products/<%= product._id %>?_method=PUT" method="post">
+        <label for="productName">Product name</label>
+        <input type="text" name="productName" id="productName" value="<%= product.productName %>">
+        <label for="price">Price</label>
+        <input type="number" name="price" id="price" value="<%= product.price %>">
+        <label for="categories">Categories</label>
+        <select name="category" id="categories" >
+            <option value="<%= product.category %>" selected><%= product.category  %></option>
+            <option value="stationery">stationery</option>
+            <option value="kitchen">kitchen</option>
+            <option value="electronics">electronics</option>
+            <option value="apparels">apparels</option>
+        </select>
+        <label for="quantity">Quantity</label>
+        <input type="number" name="quantity" id="quantity" value="<%= product.quantity %>">
+        <button type="submit">Update Product</button>
+        <button type="reset">Clear</button>
+    </form>
+   </main>
+</body>
+</html>
