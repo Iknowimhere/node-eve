@@ -23,6 +23,7 @@ let userSchema = new Schema({
     type: String,
     required: true,
     minlength: 6,
+    select:false
   },
   confirmPassword: {
     type: String,

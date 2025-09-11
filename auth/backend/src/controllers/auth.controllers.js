@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import generateToken from "../utils/generateToken.js";
 
 const register = async (req, res, next) => {
   try {
@@ -23,10 +24,14 @@ const register = async (req, res, next) => {
          res.status(400).json({ message: "Sorry user was not created!!" });
         return
     }
+    //TODO:generate token
+    let token=generateToken(newUser._id)
     //TODO:send response
     res.status(200).json({
         message:"Registered successfully",
-        newUser
+        username:newUser.username,
+        email:newUser.email,
+        token
     })
   } catch (error) {
     console.log(error);
@@ -39,7 +44,9 @@ const login = async (req, res, next) => {
     // TODO: get user body(email,password)
     let {email,password}=req.body
     //TODO:check user exits
-    let existingUser=await User.findOne({email})
+    let existingUser=await User.findOne({email}).select("username email password")
+    console.log(existingUser);
+    
     //TODO:if user doesnt exist ask him/her to register first
     if(!existingUser){
         res.status(400).json({ message: "User doesnt exist please register" });
@@ -52,12 +59,18 @@ const login = async (req, res, next) => {
         res.status(400).json({ message: "Password doesnt match!!" });
         return
     }
+    //TODO:generate token
+    let token=generateToken(existingUser._id)
     //TODO:send response
      res.status(200).json({
         message:"Logged In successfully",
-        existingUser
+        username:existingUser.username,
+        email:existingUser.email,
+        token
     })
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ message: "Internal server error" });
   }
 };
