@@ -1,10 +1,27 @@
-import { createContext, useContext } from "react";
-
+import { createContext, useContext, useEffect, useState } from "react";
 let AuthContext=createContext()
 
 //auth provider will be wrapped the components inside Auth provider are children
 export const AuthProvider=({children})=>{
-    return <AuthContext.Provider value={{name:"tony stark"}}>{children}</AuthContext.Provider>
+    let [token,setToken]=useState(()=>{
+        let res=localStorage.getItem("token")|| null
+        return res;
+    })
+
+    useEffect(()=>{
+        if(token){
+            localStorage.setItem("token",token)
+        }
+    },[token])
+
+    let logout=()=>{
+        if(token){
+            localStorage.removeItem("token")
+            setToken(null)
+        }
+    }
+
+    return <AuthContext.Provider value={{token,setToken,logout}}>{children}</AuthContext.Provider>
 }
 //create a custom hook to consume context data using useContext hook
 const useAuth=()=>{

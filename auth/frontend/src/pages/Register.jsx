@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import axios from '../lib/axios';
+import useAuth from '../context/AuthContext';
+import { useNavigate } from 'react-router';
 
 const Register = () => {
+  const {setToken}=useAuth()
+  let navigate=useNavigate()
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -25,8 +29,8 @@ const Register = () => {
       return;
     }
     let res=await axios.post("/auth/register",{...formData})
-    console.log(res);
-    
+    setToken(res.data.token)
+    navigate("/")
    //store user info into localstorage
    //navigate to home
   };
