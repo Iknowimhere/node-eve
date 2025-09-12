@@ -21,7 +21,9 @@ export const AuthProvider=({children})=>{
         }
     }
 
-    return <AuthContext.Provider value={{token,setToken,logout}}>{children}</AuthContext.Provider>
+    let isAuthenticated=!!token
+
+    return <AuthContext.Provider value={{token,setToken,logout,isAuthenticated}}>{children}</AuthContext.Provider>
 }
 //create a custom hook to consume context data using useContext hook
 const useAuth=()=>{

@@ -22,8 +22,6 @@ let navigate=useNavigate()
   useEffect(()=>{
     if(token){
       fetchUser()
-    }else{
-      navigate("/login")
     }
   },[token])
   return (
