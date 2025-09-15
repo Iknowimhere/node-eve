@@ -3,10 +3,13 @@ import mongoose from "mongoose";
 let consversationSchema = new mongoose.Schema(
   {
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Messages" }],
-    groupName:{
-        type:String
-    }
+    isGroup: {
+      type: Boolean,
+      required: false,
+    },
+    name: {
+      type: String,
+    },
   },
 
   { timestamps: true }

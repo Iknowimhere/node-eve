@@ -31,6 +31,7 @@ const register = async (req, res, next) => {
         message:"Registered successfully",
         username:newUser.username,
         email:newUser.email,
+        _id:newUser._id,
         token
     })
   } catch (error) {
@@ -66,6 +67,7 @@ const login = async (req, res, next) => {
         message:"Logged In successfully",
         username:existingUser.username,
         email:existingUser.email,
+         _id:existingUser._id,
         token
     })
   } catch (error) {

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 let messageSchema = new mongoose.Schema(
   {
-    recentMessage: {
+    text: {
       type: String,
     },
     conversationId: {

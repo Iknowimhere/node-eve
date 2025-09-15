@@ -2,6 +2,7 @@ import express from 'express'
 import dbConnect from './config/db.js';
 import authRoutes from './routes/auth.routes.js'
 import userRoutes from './routes/user.routes.js'
+import conversationRoutes from './routes/conversation.routes.js'
 import cors from 'cors'
 dbConnect()
 
@@ -12,5 +13,6 @@ app.use(cors({origin:"http://localhost:5173"}))
 //base route
 app.use("/api/auth",authRoutes)
 app.use("/api/users",userRoutes)
+app.use("/api/conversations",conversationRoutes)
 
 export default app;
