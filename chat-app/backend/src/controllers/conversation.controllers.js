@@ -72,4 +72,8 @@ export const getConversation = async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+//get all convos
+export const getAllConversation=async (req,res,next)=>{
+    
+}
 //conversationId-Delete
