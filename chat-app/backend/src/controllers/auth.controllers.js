@@ -46,8 +46,7 @@ const login = async (req, res, next) => {
     let {email,password}=req.body
     //TODO:check user exits
     let existingUser=await User.findOne({email}).select("username email password")
-    console.log(existingUser);
-    
+
     //TODO:if user doesnt exist ask him/her to register first
     if(!existingUser){
         res.status(400).json({ message: "User doesnt exist please register" });
