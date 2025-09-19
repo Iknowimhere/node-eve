@@ -60,7 +60,6 @@ export const createConversation = async (req, res, next) => {
 export const getConversation = async (req, res, next) => {
   let { conversationId } = req.params;
   try {
-
     let messages = await Message.find({ conversationId }).populate(
       "sender",
       "username"
@@ -74,7 +73,9 @@ export const getConversation = async (req, res, next) => {
 //get all convos
 export const getAllConversation = async (req, res, next) => {
   try {
-    let conversations = await Conversation.find({ members: req.userId });
+    let conversations = await Conversation.find({
+      members: req.userId,
+    }).populate("members", "username");
     if (!conversations) {
       res.status(400).json({ message: "no conversations found for this user" });
       return;
