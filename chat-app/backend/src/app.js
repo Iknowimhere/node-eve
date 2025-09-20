@@ -14,11 +14,13 @@ let app = express();
 const server = http.createServer(app);
 //middlewares
 app.use(express.json());
-app.use(cors({ origin: "https://node-eve.vercel.app" }));
+app.use(
+  cors({ origin: "https://node-9z64bt2nw-iknowimheres-projects.vercel.app" })
+);
 
 let io = new Server(server, {
   cors: {
-    origin: "https://node-eve.vercel.app",
+    origin: "https://node-9z64bt2nw-iknowimheres-projects.vercel.app",
   },
 });
 //base route
