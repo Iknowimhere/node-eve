@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import GroupChatModal from "../components/GroupChatModal";
 import UserSearch from "../components/UserSearch";
@@ -6,6 +6,8 @@ import ConversationList from "../components/ConversationList";
 import MessageList from "../components/MessageList";
 import MessageInput from "../components/MessageInput";
 import axios from "../lib/axios";
+import socket from "../socket";
+
 
 const ChatDashBoard = () => {
   const { user, logout, token } = useAuth();
@@ -27,6 +29,7 @@ const ChatDashBoard = () => {
   const [messages, setMessages] = useState([]);
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
+  const socketRef = useRef(null);
 
   const handleGroupUserSearch = async (e) => {
     e.preventDefault();
@@ -163,9 +166,146 @@ const ChatDashBoard = () => {
     }
   };
 
-  const handleSelectConv = (conv) => {};
+  const fetchMessages = async (convId) => {
+    setMessagesLoading(true);
+    setMessagesError("");
+    try {
+      const res = await axios.get(`/conversations/${convId}/messages`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = res.data;
+      if (res.status === 200) {
+        setMessages(data);
+      } else {
+        setMessagesError(data.error || "Failed to fetch messages");
+      }
+    } catch (err) {
+      setMessagesError("Network error");
+    }
+    setMessagesLoading(false);
+  };
 
-  const handleSendMessage = async (text) => {};
+  useEffect(() => {
+    if (!socketRef.current || !selectedConv) return;
+
+    const handleNewMessage = (msg) => {
+      // Only add message if it belongs to the current conversation and not already present
+      if (
+        msg.conversationId === selectedConv._id &&
+        !messages.some((m) => m._id === msg._id)
+      ) {
+        setMessages((prev) => {
+          if (prev.some((m) => m._id === msg._id)) return prev;
+          return [...prev, msg];
+        });
+      }
+    };
+
+    socketRef.current.on("newMessage", handleNewMessage);
+
+    return () => {
+      socketRef.current.off("newMessage", handleNewMessage);
+    };
+  }, [selectedConv]);
+
+  const handleSelectConv = (conv) => {
+    setSelectedConv(conv);
+    fetchMessages(conv._id);
+    if (socketRef.current && conv && conv._id) {
+      socketRef.current.emit("joinConversation", conv._id);
+    } else {
+      console.log("not emitting joinConversation, socket or conv invalid", {
+        socket: !!socketRef.current,
+        conv,
+      });
+    }
+  };
+
+  const handleSendMessage = async (text) => {
+    if (!selectedConv) return;
+    setMessagesLoading(true);
+    setMessagesError("");
+    try {
+      let res = await axios.post(
+        `/messages/${selectedConv._id}/`,
+        { text },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.status === 201) {
+        // setMessages((prev) => {
+        //   if (prev.some((m) => m._id === res.data._id)) return prev;
+        //   return [...prev, res.data];
+        // });
+        //emit socket event
+        if (socketRef.current) {
+          socketRef.current.emit("sendMessage", {
+            conversationId: selectedConv._id,
+            ...res.data,
+          });
+        }
+      } else {
+        setMessagesError(res.data.error || "Failed to send message");
+      }
+    } catch (err) {
+      setMessagesError("Network error");
+    }
+    setMessagesLoading(false);
+  };
+
+  //configure socket
+  useEffect(() => {
+    if (token && !socketRef.current) {
+      socket.auth = { token };
+      socketRef.current = socket;
+
+      socket.on("connect", () => {
+        console.log("socket connected", socket.id);
+      });
+
+      socket.on("connect_error", (err) => {
+        console.error("socket connect_error", err);
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.log("socket disconnected", reason);
+      });
+
+      socket.connect();
+      console.log("socket: connecting...", socket);
+    }
+  }, [token]);
+
+  // fetch conversations
+  useEffect(() => {
+    const fetchConversations = async () => {
+      if (!token) return;
+      setLoading(true);
+      setError("");
+      try {
+        const res = await axios.get("/conversations", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.status === 200) {
+          setConversations(res.data);
+        } else {
+          setError(res.data.error || "Failed to fetch conversations");
+        }
+      } catch (err) {
+        setError("Network error");
+      }
+      setLoading(false);
+    };
+    fetchConversations();
+  }, [token]);
+
   return (
     <div className="h-screen bg-gray-100 flex">
       <div className="w-1/3 bg-white border-r flex flex-col">

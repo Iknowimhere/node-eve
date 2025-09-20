@@ -62,7 +62,7 @@ export const getConversation = async (req, res, next) => {
   try {
     let messages = await Message.find({ conversationId }).populate(
       "sender",
-      "username"
+      "username _id"
     );
     res.status(200).json(messages);
   } catch (error) {
